@@ -1,0 +1,28 @@
+<!DOCTYPE html> <!-- Используется html 5 версии -->
+{% load static %}
+<html lang="ru"> <!-- Язык сайта - русский -->
+  <head>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <meta charset="utf-8"> <!-- Кодировка сайта -->
+    <!-- Сайт готов работать с мобильными устройствами -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Yatube{% endblock %}</title>
+  </head>
+  <body>
+    <header>
+        {% include 'includes/header.html' %}
+    </header>
+
+    <main>
+        <div class="container">
+            {% block content %}
+                Ничего
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="border-top text-center py-3">
+        {% include 'includes/footer.html' %}
+    </footer>
+  </body>
+</html>

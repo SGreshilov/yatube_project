@@ -54,7 +54,7 @@ class TestCreateView:
         post = Post.objects.filter(author=user, text=text, group=group).first()
         assert post is not None, 'Проверьте, что вы сохранили новый пост при отправки формы на странице `/create/`'
         assert response.url == f'/profile/{user.username}/', (
-            f'Проверьте, что перенаправляете на страницу профиля автора `/profile/{user.username}`'
+            f'{response.url} Проверьте, что перенаправляете на страницу профиля автора `/profile/{user.username}`'
         )
 
         text = 'Проверка нового поста 2!'

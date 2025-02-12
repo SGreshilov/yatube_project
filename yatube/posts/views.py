@@ -4,7 +4,6 @@ from .models import Post, Group, User
 from .forms import PostForm
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
-from datetime import datetime
 
 
 def create_paginator(posts_list, request):
@@ -49,16 +48,16 @@ def profile(request, username):
     page_obj = create_paginator(posts_list, request)
     context = {
         'page_obj': page_obj,
-        'user_fullname': user.get_full_name(),
+        'author': user,
         'post_cnt': len(posts_list)
     }
     return render(request, 'posts/profile.html', context)
 
 
 def post_detail(request, post_id):
-    """Страница отдельного поста"""
+    """Страница поста"""
 
-    post = get_object_or_404(Post, pk=post_id).objects.select_related
+    post = get_object_or_404(Post, pk=post_id)
     user = post.author
     count_posts_user = Post.objects.filter(author=user).count()
     context = {
@@ -73,6 +72,7 @@ def post_detail(request, post_id):
 def post_create(request):
     """Страница создания поста"""
 
+    template_name = 'posts/create_post.html'
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
@@ -80,43 +80,23 @@ def post_create(request):
             post.author = request.user
             post.save()
             return redirect('posts:profile', request.user.username)
-        return render(
-            request,
-            'posts/create_post.html',
-            {
-                'form': form,
-                'is_edit': False,
-            }
-        )
+        return render(request,template_name,{'form': form, 'is_edit': False})
     form = PostForm()
-    return render(
-        request,
-        'posts/create_post.html',
-        {'form': form, 'is_edit': False,}
-    )
+    return render(request, template_name, {'form': form, 'is_edit': False})
 
 
 @login_required
 def post_edit(request, post_id):
     """Страница редактирования поста"""
 
+    template_name = 'posts/create_post.html'
+
     post = get_object_or_404(Post, pk=post_id)
-    form = PostForm(instance=post)
-    if post.author.username != request.user.username:
-        return redirect('posts:post_detail', post.pk)
+    if post.author != request.user:
+        return redirect('posts:post_detail', post_id)
+    form = PostForm(request.POST or None, instance=post)
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
         if form.is_valid():
             form.save()
-            return redirect('posts:profile', request.user.username)
-        return render(
-            request,
-            'posts/create_post.html',
-            {'form': form,'is_edit': True}
-        )
-    return render(
-        request,
-        'posts/create_post.html',
-        {'form': form, 'is_edit': True
-        }
-    )
+            return redirect('posts:post_detail', post_id)
+    return render(request, template_name, {'form': form, 'is_edit': True})

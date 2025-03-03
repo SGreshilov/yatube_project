@@ -8,9 +8,9 @@ class TestCreateView:
     @pytest.mark.django_db(transaction=True)
     def test_create_view_get(self, user_client):
         try:
-            response = user_client.get('/create')
+            response = user_client.get('/create/')
         except Exception as e:
-            assert False, f'''Страница `/create` работает неправильно. Ошибка: `{e}`'''
+            assert False, f'''Страница `/create/` работает неправильно. Ошибка: `{e}`'''
         if response.status_code in (301, 302):
             response = user_client.get('/create/')
         assert response.status_code != 404, 'Страница `/create/` не найдена, проверьте этот адрес в *urls.py*'
@@ -54,7 +54,7 @@ class TestCreateView:
         post = Post.objects.filter(author=user, text=text, group=group).first()
         assert post is not None, 'Проверьте, что вы сохранили новый пост при отправки формы на странице `/create/`'
         assert response.url == f'/profile/{user.username}/', (
-            f'{response.url} Проверьте, что перенаправляете на страницу профиля автора `/profile/{user.username}`'
+            f'Проверьте, что перенаправляете на страницу профиля автора `/profile/{user.username}`'
         )
 
         text = 'Проверка нового поста 2!'

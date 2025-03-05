@@ -41,6 +41,11 @@ class Post(models.Model):
         on_delete=models.CASCADE,
         verbose_name = 'Группа'
     )
+    image = models.ImageField(
+        verbose_name='Картинка',
+        upload_to='posts/',
+        blank=True
+    )
 
     class Meta:
         verbose_name = 'Публикация'

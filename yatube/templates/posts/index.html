@@ -8,6 +8,9 @@
     {% for post in page_obj %}
         <ul>
             <li>
+                ID: <a href="{% url 'posts:post_detail' post.pk %}">{{ post.pk }}</a>
+            </li>
+            <li>
                 Автор: {{ post.author.get_full_name }}
             </li>
             <li>

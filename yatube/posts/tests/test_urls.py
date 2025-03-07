@@ -50,7 +50,7 @@ class PostURLTests(TestCase):
         """Проверка доступности страницы создания поста неавторизованному пользователю"""
         response = self.guest_client.get('/create/')
         self.assertRedirects(response, '/auth/login/?next=/create/')
-        
+
     def test_post_edit_redirect_no_author(self):
         """Проверка доступности страницы редактирования поста не для автора"""
         post_id = PostURLTests.post_id

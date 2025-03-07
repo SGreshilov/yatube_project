@@ -42,11 +42,10 @@ class Post(models.Model):
         verbose_name = 'Группа'
     )
     image = models.ImageField(
-        verbose_name='Картинка',
+        'Картинка',
         upload_to='posts/',
         blank=True
     )
-
     class Meta:
         verbose_name = 'Публикация'
         verbose_name_plural = 'Публикации'

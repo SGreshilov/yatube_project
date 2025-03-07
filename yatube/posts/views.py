@@ -74,7 +74,10 @@ def post_create(request):
 
     template_name = 'posts/create_post.html'
     if request.method == 'POST':
-        form = PostForm(request.POST)
+        form = PostForm(
+            request.POST or None,
+            files=request.FILES or None
+        )
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -87,16 +90,21 @@ def post_create(request):
 
 @login_required
 def post_edit(request, post_id):
-    """Страница редактирования поста"""
-
-    template_name = 'posts/create_post.html'
-
     post = get_object_or_404(Post, pk=post_id)
     if post.author != request.user:
-        return redirect('posts:post_detail', post_id)
-    form = PostForm(request.POST or None, instance=post, files=request.FILES or None)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            return redirect('posts:post_detail', post_id)
-    return render(request, template_name, {'form': form, 'is_edit': True})
+        return redirect('posts:post_detail', post_id=post_id)
+
+    form = PostForm(
+        request.POST or None,
+        files=request.FILES or None,
+        instance=post
+    )
+    if form.is_valid():
+        form.save()
+        return redirect('posts:post_detail', post_id=post_id)
+    context = {
+        'post': post,
+        'form': form,
+        'is_edit': True,
+    }
+    return render(request, 'posts/create_post.html', context)

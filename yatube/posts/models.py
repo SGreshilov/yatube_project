@@ -46,9 +46,39 @@ class Post(models.Model):
         upload_to='posts/',
         blank=True
     )
+
     class Meta:
         verbose_name = 'Публикация'
         verbose_name_plural = 'Публикации'
+
+    def __str__(self):
+        return self.text[:15]
+
+
+class Comment(models.Model):
+    """Комментарий"""
+
+    post = models.ForeignKey(
+        Post,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Публикация'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='Автор'
+    )
+    text = models.TextField(verbose_name='Текст')
+    created = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата публикации'
+    )
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
     def __str__(self):
         return self.text[:15]

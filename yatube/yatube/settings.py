@@ -37,6 +37,7 @@ LOGIN_REDIRECT_URL = 'posts:index'
 # Application definition
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+CSRF_FAILURE_VIEW = 'core.views.csrf_failure'
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
